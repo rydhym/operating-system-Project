@@ -1,4 +1,2 @@
 target:
-	g++ -c main.cpp
-	g++ -o lab4 main.o
-	
+	g++ -I include main.cpp src/*.cpp -o lab4

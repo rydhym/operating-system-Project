@@ -1,37 +1,24 @@
-#ifndef PARSER_H_INCLUDED
-#define PARSER_H_INCLUDED
+#include "../include/parser.h"
 
-#include <bits/stdc++.h>
-
-using namespace std;
-
-/** This file handles parsing the data we are going to work with **/
-/** It also holds all the global variables we parse into         **/
-
-
-string operation;
+/** Global Variables Definition **/
+std::string operation;
 int last_instant, process_count;
-vector<pair<char, int>> algorithms;
-vector<tuple<string,int,int>> processes;
-vector<vector<char>>timeline;
-unordered_map<string,int>processToIndex;
+std::vector<std::pair<char, int>> algorithms;
+std::vector<std::tuple<std::string,int,int>> processes;
+std::vector<std::vector<char>> timeline;
+std::unordered_map<std::string,int> processToIndex;
+std::vector<int> finishTime;
+std::vector<int> turnAroundTime;
+std::vector<float> normTurn;
 
-
-//Results
-
-vector<int>finishTime;
-vector<int>turnAroundTime;
-vector<float>normTurn;
-
-
-void parse_algorithms(string algorithm_chunk)
+void parse_algorithms(std::string algorithm_chunk)
 {
-    stringstream stream(algorithm_chunk);
+    std::stringstream stream(algorithm_chunk);
     while (stream.good())
     {
-        string temp_str;
+        std::string temp_str;
         getline(stream, temp_str, ',');
-        stringstream ss(temp_str);
+        std::stringstream ss(temp_str);
         getline(ss, temp_str, '-');
         char algorithm_id = temp_str[0];
         getline(ss, temp_str, '-');
@@ -42,14 +29,14 @@ void parse_algorithms(string algorithm_chunk)
 
 void parse_processes()
 {
-    string process_chunk, process_name;
+    std::string process_chunk, process_name;
     int process_arrival_time, process_service_time;
     for(int i=0; i<process_count; i++)
     {
-        cin >> process_chunk;
+        std::cin >> process_chunk;
 
-        stringstream stream(process_chunk);
-        string temp_str;
+        std::stringstream stream(process_chunk);
+        std::string temp_str;
         getline(stream, temp_str, ',');
         process_name = temp_str;
         getline(stream, temp_str, ',');
@@ -64,8 +51,8 @@ void parse_processes()
 
 void parse()
 {
-    string algorithm_chunk;
-    cin >> operation >> algorithm_chunk >> last_instant >> process_count;
+    std::string algorithm_chunk;
+    std::cin >> operation >> algorithm_chunk >> last_instant >> process_count;
     parse_algorithms(algorithm_chunk);
     parse_processes();
     finishTime.resize(process_count);
@@ -76,6 +63,3 @@ void parse()
         for(int j=0; j<process_count; j++)
             timeline[i].push_back(' ');
 }
-
-
-#endif // PARSER_H_INCLUDED
