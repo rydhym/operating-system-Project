@@ -51,9 +51,9 @@ void execute_algorithm(char algorithm_id, int quantum, string operation)
     }
 }
 
-int main()
+int main(int argc, char* argv[])
 {
-    parse();
+    parse(argc, argv);
     for (int idx = 0; idx < (int)algorithms.size(); idx++)
     {
         clear_timeline();

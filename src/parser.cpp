@@ -49,8 +49,21 @@ void parse_processes()
     }
 }
 
-void parse()
+extern int process_count;
+int core_count = 1; 
+
+// ... (other globals)
+
+void parse(int argc, char* argv[])
 {
+    if (argc > 1) {
+        try {
+            core_count = std::stoi(argv[1]);
+            if (core_count < 1) core_count = 1;
+        } catch (...) {
+            core_count = 1;
+        }
+    }
     std::string algorithm_chunk;
     std::cin >> operation >> algorithm_chunk >> last_instant >> process_count;
     parse_algorithms(algorithm_chunk);
