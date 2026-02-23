@@ -9,6 +9,7 @@ using namespace std;
 
 const string TRACE = "trace";
 const string SHOW_STATISTICS = "stats";
+const string JSON_OUTPUT = "json";
 
 void execute_algorithm(char algorithm_id, int quantum, string operation)
 {
@@ -62,6 +63,8 @@ int main(int argc, char* argv[])
             printTimeline(idx);
         else if (operation == SHOW_STATISTICS)
             printStats(idx);
+        else if (operation == JSON_OUTPUT)
+            printJSON(idx);
         cout << "\n";
     }
     return 0;

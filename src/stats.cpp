@@ -106,3 +106,34 @@ void printTimeline(int algorithm_index)
     }
     cout << "------------------------------------------------\n";
 }
+
+void printJSON(int algorithm_index) {
+    cout << "{" << endl;
+    cout << "  \"algorithm\": \"" << ALGORITHMS[algorithms[algorithm_index].first - '0'];
+    if (algorithms[algorithm_index].first - '0' == 2) {
+        cout << algorithms[algorithm_index].second;
+    }
+    cout << "\"," << endl;
+    cout << "  \"processes\": [" << endl;
+    for (int i = 0; i < process_count; i++) {
+        cout << "    {" << endl;
+        cout << "      \"name\": \"" << getProcessName(processes[i]) << "\"," << endl;
+        cout << "      \"arrival\": " << getArrivalTime(processes[i]) << "," << endl;
+        cout << "      \"service\": " << getServiceTime(processes[i]) << "," << endl;
+        cout << "      \"finish\": " << finishTime[i] << "," << endl;
+        cout << "      \"turnaround\": " << turnAroundTime[i] << "," << endl;
+        cout << "      \"normTurn\": " << normTurn[i] << endl;
+        cout << "    }" << (i == process_count - 1 ? "" : ",") << endl;
+    }
+    cout << "  ]," << endl;
+    cout << "  \"timeline\": [" << endl;
+    for (int i = 0; i < last_instant; i++) {
+        cout << "    [";
+        for (int j = 0; j < process_count; j++) {
+            cout << "\"" << timeline[i][j] << "\"" << (j == process_count - 1 ? "" : ",");
+        }
+        cout << "]" << (i == last_instant - 1 ? "" : ",") << endl;
+    }
+    cout << "  ]" << endl;
+    cout << "}" << endl;
+}
