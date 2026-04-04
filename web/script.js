@@ -128,12 +128,14 @@ document.addEventListener('DOMContentLoaded', () => {
         statsTableBody.innerHTML = '';
         data.processes.forEach(proc => {
             const tr = document.createElement('tr');
+            const waitingTime = proc.turnaround - proc.service;
             tr.innerHTML = `
                 <td>${proc.name}</td>
                 <td>${proc.arrival}</td>
                 <td>${proc.service}</td>
                 <td>${proc.finish}</td>
                 <td>${proc.turnaround}</td>
+                <td>${waitingTime}</td>
                 <td>${proc.normTurn.toFixed(2)}</td>
             `;
             statsTableBody.appendChild(tr);
