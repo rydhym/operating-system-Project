@@ -104,17 +104,17 @@ tailwind.config = {
 </div>
 </section>
 
-<section class="glass-panel rounded-xl p-6 mt-6">
-<div class="flex items-center gap-3 mb-4">
-<span class="material-symbols-outlined text-[#ddb7ff]">school</span>
-<h3 class="font-headline font-bold text-lg text-on-surface">Study Notes</h3>
+<section class="glass-panel rounded-xl p-5 mt-6">
+<div class="flex items-center gap-2 mb-3 border-b border-white/5 pb-3">
+<span class="material-symbols-outlined text-[#ddb7ff] text-lg">school</span>
+<h3 class="font-headline font-bold text-sm text-on-surface uppercase tracking-wider">Study Notes</h3>
 </div>
-<div class="space-y-3 text-xs text-on-surface-variant leading-relaxed">
-<p><strong class="text-primary">Burst Time:</strong> Total time the process requires the CPU to complete execution.</p>
-<p><strong class="text-primary">Turnaround Time:</strong> Total time taken from arrival to completion. <br><span class="opacity-70 font-mono text-[10px] bg-black/20 p-1 rounded mt-1 inline-block">Finish - Arrival</span></p>
-<p><strong class="text-primary">Waiting Time:</strong> Total time spent waiting in the ready queue. <br><span class="opacity-70 font-mono text-[10px] bg-black/20 p-1 rounded mt-1 inline-block">Turnaround - Burst Time</span></p>
-<p><strong class="text-primary">Normalized Turn.:</strong> Relative metric of delay. A value of 1.0 means no waiting. <br><span class="opacity-70 font-mono text-[10px] bg-black/20 p-1 rounded mt-1 inline-block">Turnaround ÷ Burst Time</span></p>
-</div>
+<ul class="space-y-3 text-[11px] text-on-surface-variant list-disc pl-4 leading-relaxed">
+<li><strong class="text-primary">Burst Time:</strong> Total time the process needs the CPU.</li>
+<li><strong class="text-primary">Turnaround Time:</strong> Total time from arrival to completion. <br><code class="whitespace-nowrap bg-black/30 text-white font-mono px-1.5 py-0.5 rounded mt-1 inline-block">Finish - Arrival Time</code></li>
+<li><strong class="text-primary">Waiting Time:</strong> Total time spent trapped in the ready queue. <br><code class="whitespace-nowrap bg-black/30 text-white font-mono px-1.5 py-0.5 rounded mt-1 inline-block">Turnaround - Burst Time</code></li>
+<li><strong class="text-primary">Normalized Turn.:</strong> Penalty ratio (1.0 means no waiting). <br><code class="whitespace-nowrap bg-black/30 text-white font-mono px-1.5 py-0.5 rounded mt-1 inline-block">Turnaround ÷ Burst Time</code></li>
+</ul>
 </section>
 </div>
 
