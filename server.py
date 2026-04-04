@@ -71,5 +71,6 @@ class SimulationHandler(http.server.SimpleHTTPRequestHandler):
         return super().do_GET()
 
 print(f"Server starting at http://localhost:{PORT}")
+socketserver.TCPServer.allow_reuse_address = True
 with socketserver.TCPServer(("", PORT), SimulationHandler) as httpd:
     httpd.serve_forever()
