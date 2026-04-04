@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     addProcessBtn.addEventListener('click', () => addProcess());
 
-    runBtn.addEventListener('click', async () => {
+    runBtn.addEventListener('click', () => {
         const algorithm = algorithmSelect.value;
         const quantum = document.getElementById('quantum').value;
         const lastInstant = document.getElementById('last-instant').value;
@@ -60,34 +60,15 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        const requestData = {
-            algorithm,
-            quantum: (algorithm === '2' || algorithm === '8') ? quantum : '1',
-            lastInstant,
-            processes
-        };
-
-        runBtn.disabled = true;
-        runBtn.textContent = 'Running...';
+        const q = (algorithm === '2' || algorithm === '8') ? quantum : '1';
 
         try {
-            const response = await fetch('/run', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(requestData)
-            });
-
-            if (!response.ok) throw new Error('Simulation failed');
-
-            const data = await response.json();
+            const data = runScheduler(algorithm, q, lastInstant, processes);
             renderResults(data);
             resultsArea.style.display = 'block';
             resultsArea.scrollIntoView({ behavior: 'smooth' });
         } catch (err) {
             alert('Error running simulation: ' + err.message);
-        } finally {
-            runBtn.disabled = false;
-            runBtn.textContent = 'Run Simulation';
         }
     });
 

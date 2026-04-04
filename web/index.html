@@ -1,108 +1,180 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CPU Scheduler Visualizer</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Scheduler Pro | Kinetic Glass Visualizer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css">
+<script id="tailwind-config">
+tailwind.config = {
+    darkMode: "class",
+    theme: {
+        extend: {
+            colors: {
+                "surface-dim": "#10131a", "tertiary": "#4edea3", "tertiary-container": "#00885d",
+                "on-error-container": "#ffdad6", "on-surface": "#e1e2eb", "outline-variant": "#464554",
+                "surface-container": "#1d2026", "inverse-primary": "#494bd6", "on-secondary-fixed-variant": "#6900b3",
+                "primary-container": "#8083ff", "on-primary-fixed": "#07006c", "tertiary-fixed": "#6ffbbe",
+                "inverse-on-surface": "#2e3037", "on-surface-variant": "#c7c4d7", "on-primary-fixed-variant": "#2f2ebe",
+                "tertiary-fixed-dim": "#4edea3", "surface-variant": "#32353c", "primary-fixed-dim": "#c0c1ff",
+                "on-tertiary-fixed-variant": "#005236", "surface-container-low": "#191c22", "surface-tint": "#c0c1ff",
+                "inverse-surface": "#e1e2eb", "on-secondary-fixed": "#2c0051", "on-secondary": "#490080",
+                "on-primary-container": "#0d0096", "surface-container-high": "#272a31", "on-secondary-container": "#d6a9ff",
+                "primary": "#c0c1ff", "surface-container-highest": "#32353c", "surface-container-lowest": "#0b0e14",
+                "error-container": "#93000a", "background": "#10131a", "on-background": "#e1e2eb",
+                "surface": "#10131a", "primary-fixed": "#e1e0ff", "secondary-fixed-dim": "#ddb7ff",
+                "on-tertiary-fixed": "#002113", "secondary-fixed": "#f0dbff", "on-tertiary-container": "#000703",
+                "on-primary": "#1000a9", "on-error": "#690005", "outline": "#908fa0", "surface-bright": "#363940",
+                "secondary": "#ddb7ff", "secondary-container": "#6f00be", "on-tertiary": "#003824", "error": "#ffb4ab"
+            },
+            fontFamily: {
+                "headline": ["Space Grotesk"], "body": ["Inter"], "label": ["Inter"]
+            },
+        },
+    },
+}
+</script>
 </head>
-<body>
-    <div class="container">
-        <header>
-            <h1>CPU Scheduling <span>Visualizer</span></h1>
-            <p>Interactive visualization for operating system algorithms</p>
-        </header>
+<body class="bg-surface-container-lowest text-on-surface font-body selection:bg-primary/30 min-h-screen overflow-x-hidden">
+<header class="fixed top-0 w-full flex justify-between items-center px-6 h-16 bg-[#0B0E14]/60 backdrop-blur-xl border-b border-white/5 z-50 shadow-[0px_24px_48px_rgba(0,0,0,0.4)]">
+<div class="flex items-center gap-4">
+<span class="text-2xl font-bold bg-gradient-to-r from-[#C0C1FF] to-[#8083FF] bg-clip-text text-transparent font-headline tracking-tight">CPU Scheduler Pro</span>
+</div>
+</header>
+<main class="pt-24 px-6 pb-12 w-full max-w-7xl mx-auto">
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
+<div class="xl:col-span-4 space-y-6">
+<section class="glass-panel rounded-xl p-6">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">settings_input_component</span>
+<h3 class="font-headline font-bold text-lg text-on-surface">Simulation Settings</h3>
+</div>
+<div class="space-y-5">
+<div class="space-y-2">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Algorithm Strategy</label>
+<select id="algorithm" class="w-full bg-surface-container-low border border-white/10 rounded-lg px-3 py-2 text-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all">
+<option value="1">First Come First Serve (FCFS)</option>
+<option value="2">Round Robin (RR)</option>
+<option value="3">Shortest Process Next (SPN)</option>
+<option value="4">Shortest Remaining Time (SRT)</option>
+<option value="5">Highest Response Ratio Next (HRRN)</option>
+<option value="6">Feedback (q=1)</option>
+<option value="7">Feedback (q=2^i)</option>
+<option value="8">Aging</option>
+</select>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2 flex-col" id="quantum-container" style="display: none;">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Quantum</label>
+<input id="quantum" class="w-full bg-surface-container-low border border-white/10 rounded-lg px-3 py-2 text-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all" type="number" value="1" min="1"/>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Timeline</label>
+<input id="last-instant" class="w-full bg-surface-container-low border border-white/10 rounded-lg px-3 py-2 text-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all" type="number" value="20" min="1"/>
+</div>
+</div>
+</div>
+</section>
 
-        <main>
-            <section class="controls card">
-                <h2>Simulation Settings</h2>
-                <div class="settings-grid">
-                    <div class="form-group">
-                        <label for="algorithm">Algorithm</label>
-                        <select id="algorithm">
-                            <option value="1">First Come First Serve (FCFS)</option>
-                            <option value="2">Round Robin (RR)</option>
-                            <option value="3">Shortest Process Next (SPN)</option>
-                            <option value="4">Shortest Remaining Time (SRT)</option>
-                            <option value="5">Highest Response Ratio Next (HRRN)</option>
-                            <option value="6">Feedback (q=1)</option>
-                            <option value="7">Feedback (q=2^i)</option>
-                            <option value="8">Aging</option>
-                        </select>
-                    </div>
-                    <div class="form-group" id="quantum-container" style="display: none;">
-                        <label for="quantum">Quantum</label>
-                        <input type="number" id="quantum" value="1" min="1">
-                    </div>
-                    <div class="form-group">
-                        <label for="last-instant">Timeline Length</label>
-                        <input type="number" id="last-instant" value="20" min="1">
-                    </div>
-                </div>
+<section class="glass-panel rounded-xl overflow-hidden">
+<div class="p-4 border-b border-white/5 flex justify-between items-center">
+<h3 class="font-headline font-bold text-sm text-on-surface-variant">Active Queue</h3>
+<button id="add-process" class="px-2 py-1 rounded bg-primary/20 hover:bg-primary/30 text-primary text-xs font-bold transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">add</span> Add Process
+</button>
+</div>
+<div class="overflow-x-auto max-h-[300px] overflow-y-auto">
+<table class="w-full text-left text-xs">
+<thead class="bg-white/5 text-slate-500 uppercase tracking-widest font-bold">
+<tr>
+<th class="px-4 py-3">ID</th>
+<th class="px-4 py-3">Arr</th>
+<th class="px-4 py-3">Svc</th>
+<th class="px-4 py-3"></th>
+</tr>
+</thead>
+<tbody id="process-list" class="divide-y divide-white/5">
+<!-- Process rows will be added here via JS -->
+</tbody>
+</table>
+</div>
+</section>
+</div>
 
-                <h3>Processes</h3>
-                <div id="process-list" class="process-grid">
-                    <div class="process-item header">
-                        <span>Name</span>
-                        <span>Arrival</span>
-                        <span>Service</span>
-                        <span>Action</span>
-                    </div>
-                    <!-- Process rows will be added here -->
-                </div>
-                <button id="add-process" class="btn secondary">Add Process</button>
-                <div class="actions">
-                    <button id="run-simulation" class="btn primary">Run Simulation</button>
-                </div>
-            </section>
+<div class="xl:col-span-8 space-y-8" id="results" style="display: none;">
+<section class="glass-panel rounded-2xl p-8 relative overflow-hidden">
+<div class="absolute -top-24 -right-24 w-64 h-64 bg-primary/10 blur-[100px] rounded-full pointer-events-none"></div>
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+<div>
+<h2 class="font-headline font-bold text-2xl text-on-surface">Execution Timeline</h2>
+<p class="text-sm text-slate-500">Visualizing thread allocation across CPU cycles</p>
+</div>
+<div class="flex items-center gap-4 text-xs">
+<div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-primary shadow-[0_0_10px_rgba(99,102,241,0.5)]"></div> Running</div>
+<div class="flex items-center gap-2"><div class="w-3 h-3 rounded-sm bg-surface-container-highest border border-white/10"></div> Waiting</div>
+</div>
+</div>
+<div class="gantt-scroll w-full overflow-x-auto pb-4">
+<div id="gantt-chart" class="flex flex-col gap-2 min-w-full"></div>
+</div>
+</section>
 
-            <section id="results" class="results-area" style="display: none;">
-                <div class="card">
-                    <h2>Gantt Chart</h2>
-                    <div id="gantt-chart-container" class="gantt-scroll">
-                        <div id="gantt-chart"></div>
-                    </div>
-                    <div class="legend">
-                        <div class="legend-item"><span class="box running"></span> Running</div>
-                        <div class="legend-item"><span class="box waiting"></span> Waiting</div>
-                    </div>
-                </div>
+<section class="glass-panel rounded-2xl overflow-hidden">
+<div class="px-8 py-6 border-b border-white/5 bg-white/2">
+<h2 class="font-headline font-bold text-xl text-on-surface">Performance Metrics</h2>
+</div>
+<div class="overflow-x-auto">
+<table id="stats-table" class="w-full text-left">
+<thead class="bg-surface-container-high text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em]">
+<tr>
+<th class="px-8 py-4">Process</th>
+<th class="px-8 py-4">Arrival</th>
+<th class="px-8 py-4">Service</th>
+<th class="px-8 py-4">Finish</th>
+<th class="px-8 py-4">Turnaround</th>
+<th class="px-8 py-4">NormTurn</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5 font-body">
+</tbody>
+</table>
+</div>
+</section>
+</div>
+</div>
+</main>
 
-                <div class="card">
-                    <h2>Statistics</h2>
-                    <div class="table-container">
-                        <table id="stats-table">
-                            <thead>
-                                <tr>
-                                    <th>Process</th>
-                                    <th>Arrival</th>
-                                    <th>Service</th>
-                                    <th>Finish</th>
-                                    <th>Turnaround</th>
-                                    <th>NormTurn</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-        </main>
-    </div>
+<button id="run-simulation" class="fixed bottom-8 right-8 w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-primary-container text-on-primary-container shadow-[0_12px_40px_rgba(0,0,0,0.5)] hover:scale-110 active:scale-95 transition-all flex items-center justify-center group z-50">
+<span class="material-symbols-outlined text-3xl transition-transform group-hover:scale-110">play_arrow</span>
+<div class="absolute right-20 px-4 py-2 bg-surface-container-highest rounded-lg text-xs font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity shadow-xl border border-white/10 pointer-events-none">
+START SIMULATION
+</div>
+</button>
 
-    <!-- Template for new process row -->
-    <template id="process-row-template">
-        <div class="process-item">
-            <input type="text" class="proc-name" placeholder="P1">
-            <input type="number" class="proc-arrival" value="0" min="0">
-            <input type="number" class="proc-service" value="1" min="1">
-            <button class="remove-process btn-icon">×</button>
-        </div>
-    </template>
+<template id="process-row-template">
+<tr class="process-item hover:bg-white/5 transition-colors group">
+<td class="px-2 py-2">
+<input type="text" class="proc-name bg-transparent border-0 outline-none ring-0 w-16 text-primary font-medium placeholder:text-slate-600 focus:bg-white/5 rounded px-2 py-1" placeholder="P?">
+</td>
+<td class="px-2 py-2">
+<input type="number" class="proc-arrival bg-transparent border-0 outline-none ring-0 w-16 text-on-surface focus:bg-white/5 rounded px-2 py-1" value="0" min="0">
+</td>
+<td class="px-2 py-2">
+<input type="number" class="proc-service bg-transparent border-0 outline-none ring-0 w-16 text-on-surface focus:bg-white/5 rounded px-2 py-1" value="1" min="1">
+</td>
+<td class="px-2 py-2 text-right">
+<button class="remove-process opacity-30 hover:opacity-100 text-error hover:scale-110 transition-all p-1">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+</td>
+</tr>
+</template>
 
-    <script src="script.js"></script>
+<script src="scheduler.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
